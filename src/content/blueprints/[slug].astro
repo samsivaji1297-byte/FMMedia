@@ -1,0 +1,15 @@
+---
+import { getEntryBySlug } from 'astro:content';
+
+const { slug } = Astro.params;
+const entry = await getEntryBySlug('blueprints', slug);
+---
+
+<html>
+  <body>
+    <h1>{entry.data.title}</h1>
+    <article>
+      {entry.render().content}
+    </article>
+  </body>
+</html>

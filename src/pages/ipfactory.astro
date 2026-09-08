@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+const entries = await getCollection('ipfactory');
+---
+
+<html>
+  <body>
+    <h1>IP Factory</h1>
+    <ul>
+      {entries.map(entry => (
+        <li>
+          <a href={`/ipfactory/${entry.slug}/`}>{entry.data.title}</a>
+        </li>
+      ))}
+    </ul>
+  </body>
+</html>
