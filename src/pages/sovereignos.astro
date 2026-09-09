@@ -10,7 +10,7 @@ const entries = await getCollection('sovereignos');
     <ul>
       {entries.map(entry => (
         <li>
-          <a href={`/blueprints/${entry.slug}/`}>{entry.data.title}</a>
+          <a href={`/sovereignos/${entry.slug}/`}>{entry.data.title}</a>
         </li>
       ))}
     </ul>
