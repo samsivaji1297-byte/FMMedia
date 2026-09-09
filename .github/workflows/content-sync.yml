@@ -1,0 +1,35 @@
+name: Sync ContentFactory → Website
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "content/**"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Website Repo
+        uses: actions/checkout@v3
+
+      - name: Checkout ContentFactory Repo
+        uses: actions/checkout@v3
+        with:
+          repository: YOUR_USERNAME/ContentFactory
+          path: contentfactory
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Copy Markdown Files
+        run: |
+          mkdir -p src/content/blog
+          cp contentfactory/output/blog/*.md src/content/blog/
+
+      - name: Commit & Push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Sync content from ContentFactory" || echo "No changes to commit"
+          git push
