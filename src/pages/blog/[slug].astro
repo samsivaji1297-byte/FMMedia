@@ -1,19 +1,21 @@
 ---
-export const prerender = false;
-
 import { getCollection } from "astro:content";
-const posts = await getCollection("blog");
+import BlogPost from "../../layouts/BlogPost.astro"; // Adjust layout path if needed
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
 
   return posts.map((post) => ({
-    params: { slug: post.slug },
+    // Fall back to post.id stripped of file extension if post.slug is undefined
+    params: { slug: post.slug || post.id.replace(/\.(md|mdx)$/, '') },
     props: { post },
   }));
 }
 
 const { post } = Astro.props;
+const { Content } = await post.render();
 ---
 
-<BlogPost {...post} />
+<BlogPost {...post.data}>
+  <Content />
+</BlogPost>
