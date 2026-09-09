@@ -5,7 +5,7 @@ import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   site: 'https://example.com',
-  output: 'hybrid',
+  output: 'static',
   adapter: vercel(),
   integrations: [mdx(), sitemap()],
   fonts: [
