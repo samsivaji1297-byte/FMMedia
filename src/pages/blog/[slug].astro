@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
+import BlogPost from "../../layouts/BlogPost.astro"; // Adjust path to your site's layout if available
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -11,14 +12,14 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-
-// Astro 5 API: render(post) instead of post.render()
 const { Content } = await render(post);
 ---
 
-<div>
-  <h1>{post.data.title}</h1>
-  <p>{post.data.description}</p>
-  <hr />
-  <Content />
-</div>
+<BlogPost title={post.data.title} description={post.data.description}>
+  <article>
+    <h1>{post.data.title}</h1>
+    <p><em>{post.data.description}</em></p>
+    <hr />
+    <Content />
+  </article>
+</BlogPost>
