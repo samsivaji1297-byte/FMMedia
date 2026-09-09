@@ -1,18 +1,16 @@
 ---
 export const prerender = false;
----
----
+
 import { getCollection } from 'astro:content';
 const entries = await getCollection('writingfactory');
 ---
-
 <html>
   <body>
-    <h1>Writing Factory</h1>
+    <h1>Blueprints</h1>
     <ul>
       {entries.map(entry => (
         <li>
-          <a href={`/writingfactory/${entry.slug}/`}>{entry.data.title}</a>
+          <a href={`/blueprints/${entry.slug}/`}>{entry.data.title}</a>
         </li>
       ))}
     </ul>
