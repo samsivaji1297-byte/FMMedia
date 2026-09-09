@@ -3,6 +3,7 @@ title: "Sovereign Test Post"
 description: "Confirming the test blog system is wired and working."
 date: "2026-09-09"
 pubDate: "2026-09-09"
+slug: "sovereign-test"
 ---
 
 # Sovereign Test Post
