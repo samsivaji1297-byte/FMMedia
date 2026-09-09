@@ -1,7 +1,7 @@
 ---
 title: "Sovereign Test Post"
 description: "Confirming that the blog system is wired correctly."
-pubDate: 2026-09-09
+date: "2026-09-09"
 slug: "sovereign-test"
 ---
 
