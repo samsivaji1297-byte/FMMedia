@@ -1,19 +1,18 @@
 import { defineCollection, z } from 'astro:content';
 
-const blog = defineCollection({
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    date: z.any(),
-    pubDate: z.any().optional(),
-    slug: z.string().optional(),
-  }),
+const flexibleDate = z.union([z.string(), z.date()]).transform((val) => new Date(val));
+
+const baseSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  date: flexibleDate.optional(),
+  pubDate: flexibleDate.optional(),
 });
 
 export const collections = {
-  blog,
-  ipfactory: blog,
-  blueprints: blog,
-  sovereignos: blog,
-  writingfactory: blog,
+  blog: defineCollection({ schema: baseSchema }),
+  ipfactory: defineCollection({ schema: baseSchema }),
+  blueprints: defineCollection({ schema: baseSchema }),
+  sovereignos: defineCollection({ schema: baseSchema }),
+  writingfactory: defineCollection({ schema: baseSchema }),
 };
