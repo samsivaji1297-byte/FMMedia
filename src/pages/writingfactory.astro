@@ -10,7 +10,7 @@ const entries = await getCollection('writingfactory');
     <ul>
       {entries.map(entry => (
         <li>
-          <a href={`/blueprints/${entry.slug}/`}>{entry.data.title}</a>
+          <a href={`/writingfactory/${entry.slug}/`}>{entry.data.title}</a>
         </li>
       ))}
     </ul>
