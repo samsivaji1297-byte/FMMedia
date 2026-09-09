@@ -1,13 +1,18 @@
 ---
-import { getEntryBySlug } from 'astro:content';
+import { getCollection, getEntryBySlug } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
 
-const { slug } = Astro.params;
-const post = await getEntryBySlug('blog', slug);
-
-if (!post) {
-  throw new Error(`Post not found: ${slug}`);
+// Generate all valid slugs for this route
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post }
+  }));
 }
+
+// Load the correct post for this slug
+const { post } = Astro.props;
 ---
 
 <BlogPost {...post} />
