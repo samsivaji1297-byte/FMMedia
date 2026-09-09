@@ -1,13 +1,43 @@
-import { defineCollection, z } from "astro:content";
-
-const blog = defineCollection({
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    date: z.string().optional(),
-  }),
-});
+import { defineCollection, z } from 'astro:content';
 
 export const collections = {
-  blog,
+  blog: defineCollection({
+    schema: z.object({
+      title: z.string(),
+      description: z.string(),
+      date: z.string(),
+    }),
+  }),
+
+  ipfactory: defineCollection({
+    schema: z.object({
+      title: z.string(),
+      description: z.string(),
+      date: z.string(),
+    }),
+  }),
+
+  blueprints: defineCollection({
+    schema: z.object({
+      title: z.string(),
+      description: z.string(),
+      date: z.string(),
+    }),
+  }),
+
+  sovereignos: defineCollection({
+    schema: z.object({
+      title: z.string(),
+      description: z.string(),
+      date: z.string(),
+    }),
+  }),
+
+  writingfactory: defineCollection({
+    schema: z.object({
+      title: z.string(),
+      description: z.string(),
+      date: z.string(),
+    }),
+  }),
 };
