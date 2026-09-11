@@ -1,0 +1,98 @@
+---
+import '../../styles/global.css';
+import NavBar from '../../components/NavBar.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const osItems = await getCollection('sovereignos');
+const sortedItems = osItems.sort((a, b) => new Date(b.id).getTime() - new Date(a.id).getTime());
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sovereign OS // FM//MEDIA</title>
+  </head>
+  <body>
+    <NavBar />
+    <main class="container">
+      <section class="page-header">
+        <span class="section-tag">// MINDSET_KERNELS</span>
+        <h1>Sovereign OS</h1>
+        <p>Execution frameworks, mindset dispatches, and operating principles.</p>
+      </section>
+
+      <div class="posts-list">
+        {sortedItems.length > 0 ? (
+          sortedItems.map((item) => (
+            <a href={`/sovereignos/${item.slug || item.id.replace(/\.(md|mdx)$/, '')}`} class="post-card">
+              <h3>{item.data?.title || item.id.replace('Mindset_', '').replace('.md', '').replace(/_/g, ' ')}</h3>
+              <p>{item.data?.description || 'Read framework kernel →'}</p>
+              <span class="post-id">{item.id}</span>
+            </a>
+          ))
+        ) : (
+          <p class="empty-state">No OS frameworks found in collection.</p>
+        )}
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .page-header {
+    padding: var(--space-lg) 0 var(--space-md) 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .section-tag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+  .page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+  }
+  .page-header p {
+    color: var(--text-secondary);
+  }
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border-color);
+    border: 1px solid var(--border-color);
+    margin-top: var(--space-md);
+  }
+  .post-card {
+    background: var(--bg-primary);
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: background 0.2s ease;
+  }
+  .post-card:hover {
+    background: var(--bg-surface);
+  }
+  .post-card h3 {
+    font-size: 1.25rem;
+  }
+  .post-card p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+  .post-id {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+  .empty-state {
+    padding: var(--space-md);
+    color: var(--text-muted);
+  }
+</style>
