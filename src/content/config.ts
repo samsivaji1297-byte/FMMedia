@@ -1,18 +1,41 @@
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
-const flexibleDate = z.union([z.string(), z.date()]).transform((val) => new Date(val));
-
-const baseSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-  date: flexibleDate.optional(),
-  pubDate: flexibleDate.optional(),
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string().optional(),
+    description: z.string().optional(),
+    pubDate: z.coerce.date().optional(),
+    tags: z.array(z.string()).optional(),
+  }),
 });
 
-export const collections = {
-  blog: defineCollection({ schema: baseSchema }),
-  ipfactory: defineCollection({ schema: baseSchema }),
-  blueprints: defineCollection({ schema: baseSchema }),
-  sovereignos: defineCollection({ schema: baseSchema }),
-  writingfactory: defineCollection({ schema: baseSchema }),
-};
+const sovereignos = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/sovereignos' }),
+  schema: z.object({
+    title: z.string().optional(),
+    description: z.string().optional(),
+    pubDate: z.coerce.date().optional(),
+    tags: z.array(z.string()).optional(),
+  }),
+});
+
+const ipfactory = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/ipfactory' }),
+  schema: z.object({
+    title: z.string().optional(),
+    description: z.string().optional(),
+    price: z.string().optional(),
+  }),
+});
+
+const blueprints = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blueprints' }),
+  schema: z.object({
+    title: z.string().optional(),
+    description: z.string().optional(),
+  }),
+});
+
+export const collections = { blog, sovereignos, ipfactory, blueprints };
