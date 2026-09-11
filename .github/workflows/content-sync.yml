@@ -1,12 +1,9 @@
 name: Sync Vault → FMMedia Engine
 
 on:
-  workflow_dispatch: # Allows manual trigger anytime
+  workflow_dispatch: # Allows manual trigger anytime from Actions tab
   schedule:
-    - cron: '0 */6 * * *' # Auto-runs every 6 hours (optional)
-  # push:
-  #  branches:
-  #   - main
+    - cron: '0 */6 * * *' # Auto-runs every 6 hours
 
 jobs:
   sync:
@@ -25,22 +22,57 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           path: 'hub_temp'
 
-      - name: Map & Copy Markdown Vaults
+      - name: Map & Inject Frontmatter to Markdown Files
         run: |
-          # Ensure destination directories exist inside Astro content layer
           mkdir -p src/content/blog src/content/sovereignos
 
-          # 1. Sync FreeFall into blog collection
-          if [ -d "hub_temp/WritingFactory/FreeFall" ]; then
-            echo "Syncing FreeFall..."
-            rsync -av --delete hub_temp/WritingFactory/FreeFall/ src/content/blog/
-          fi
+          # Function to process raw markdown files and inject frontmatter
+          process_vault_folder() {
+            SRC_DIR=$1
+            DEST_DIR=$2
+            PREFIX=$3
 
-          # 2. Sync Mindset into sovereignos collection
-          if [ -d "hub_temp/WritingFactory/Mindset" ]; then
-            echo "Syncing Mindset..."
-            rsync -av --delete hub_temp/WritingFactory/Mindset/ src/content/sovereignos/
-          fi
+            if [ -d "$SRC_DIR" ]; then
+              echo "Processing files from $SRC_DIR to $DEST_DIR..."
+              for file in "$SRC_DIR"/*.md; do
+                [ -e "$file" ] || continue
+                filename=$(basename "$file")
+                
+                # Extract clean title from filename
+                clean_title=$(echo "$filename" | sed 's/\.md$//' | sed 's/_/ /g')
+                
+                # Extract date YYYY-MM-DD from filename if present, else fallback to today
+                if [[ "$filename" =~ ([0-9]{4}-[0-9]{2}-[0-9]{2}) ]]; then
+                  file_date="${BASH_REMATCH[1]}"
+                else
+                  file_date=$(date +%Y-%m-%d)
+                fi
+
+                # Check if file already has YAML frontmatter
+                if head -n 1 "$file" | grep -q "^---"; then
+                  echo "Preserving existing frontmatter in $filename"
+                  cp "$file" "$DEST_DIR/$filename"
+                else
+                  echo "Injecting frontmatter into $filename"
+                  {
+                    echo "---"
+                    echo "title: \"$clean_title\""
+                    echo "description: \"$PREFIX dispatch dispatch log entry.\""
+                    echo "pubDate: $file_date"
+                    echo "---"
+                    echo ""
+                    cat "$file"
+                  } > "$DEST_DIR/$filename"
+                fi
+              done
+            fi
+          }
+
+          # Process FreeFall -> src/content/blog
+          process_vault_folder "hub_temp/WritingFactory/FreeFall" "src/content/blog" "FreeFall"
+
+          # Process Mindset -> src/content/sovereignos
+          process_vault_folder "hub_temp/WritingFactory/Mindset" "src/content/sovereignos" "Sovereign OS"
 
           # Clean up temporary clone
           rm -rf hub_temp
@@ -53,6 +85,6 @@ jobs:
           if git diff-index --quiet HEAD; then
             echo "No new changes detected in vault."
           else
-            git commit -m "sync: pulled latest FreeFall and Mindset dispatches from Hub"
-            git push
+            git commit -m "sync: processed vault dispatches with frontmatter preprocessor"
+            git push origin main
           fi
