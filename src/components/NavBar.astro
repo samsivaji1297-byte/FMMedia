@@ -1,0 +1,55 @@
+---
+const navLinks = [
+  { label: 'Sovereign OS', href: '/sovereignos' },
+  { label: 'Blueprints', href: '/blueprints' },
+  { label: 'IP Factory', href: '/ipfactory' },
+  { label: 'Writing Factory', href: '/writingfactory' },
+  { label: 'Blog', href: '/blog' },
+];
+---
+
+<header class="nav-header">
+  <div class="container nav-container">
+    <a href="/" class="brand-logo">FM//MEDIA</a>
+    <nav class="nav-links">
+      {navLinks.map((link) => (
+        <a href={link.href} class="nav-item">{link.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nav-header {
+    border-bottom: 1px solid var(--border-color);
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 4rem;
+  }
+  .brand-logo {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    font-size: 1.1rem;
+  }
+  .nav-links {
+    display: flex;
+    gap: var(--space-md);
+  }
+  .nav-item {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+  }
+  .nav-item:hover {
+    color: var(--text-primary);
+  }
+</style>
