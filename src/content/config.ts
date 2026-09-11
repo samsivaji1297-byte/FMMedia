@@ -1,12 +1,23 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
+// Ultra-permissive date transformer: converts strings/objects safely to Date or undefined
+const safeDate = z.preprocess((val) => {
+  if (!val) return undefined;
+  if (val instanceof Date) return val;
+  if (typeof val === 'string' || typeof val === 'number') {
+    const d = new Date(val);
+    return isNaN(d.getTime()) ? undefined : d;
+  }
+  return undefined;
+}, z.date().optional());
+
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
   schema: z.object({
     title: z.string().optional(),
     description: z.string().optional(),
-    pubDate: z.coerce.date().optional(),
+    pubDate: safeDate,
     tags: z.array(z.string()).optional(),
   }),
 });
@@ -16,7 +27,7 @@ const sovereignos = defineCollection({
   schema: z.object({
     title: z.string().optional(),
     description: z.string().optional(),
-    pubDate: z.coerce.date().optional(),
+    pubDate: safeDate,
     tags: z.array(z.string()).optional(),
   }),
 });
