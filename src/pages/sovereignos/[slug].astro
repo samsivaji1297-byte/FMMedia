@@ -14,21 +14,37 @@ export async function getStaticPaths() {
 
 const { item } = Astro.props;
 const { Content } = await render(item);
+
+const displayDate = item.data?.pubDate 
+  ? new Date(item.data.pubDate).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    })
+  : 'SOVEREIGN OS';
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{item.data?.title || item.id} // FM//MEDIA</title>
   </head>
   <body>
     <NavBar />
     <main class="container">
-      <article class="article-wrapper">
-        <header class="article-header">
-          <a href="/sovereignos" class="back-link">← Sovereign OS Index</a>
-          <h1>{item.data?.title || item.id.replace('Mindset_', '').replace('.md', '')}</h1>
+      <article class="dispatch-wrapper">
+        <header class="dispatch-header">
+          <a href="/sovereignos" class="back-link">← Return to Sovereign OS Index</a>
+          <div class="meta-row">
+            <span class="dispatch-tag">// KERNEL_LOG</span>
+            <time class="dispatch-date">{displayDate}</time>
+          </div>
+          <h1 class="dispatch-title">{item.data?.title || item.id}</h1>
         </header>
+
+        <hr class="divider" />
+
         <div class="prose">
           <Content />
         </div>
@@ -39,31 +55,91 @@ const { Content } = await render(item);
 </html>
 
 <style>
-  .article-wrapper {
+  .dispatch-wrapper {
     padding: var(--space-lg) 0;
-    max-width: 750px;
+    max-width: 720px;
+    margin: 0 auto;
   }
   .back-link {
     font-family: var(--font-mono);
     font-size: 0.8rem;
     color: var(--text-muted);
-  }
-  .article-header h1 {
-    font-size: 2.25rem;
-    font-weight: 800;
-    margin-top: var(--space-xs);
+    text-decoration: none;
+    display: inline-block;
     margin-bottom: var(--space-md);
   }
+  .back-link:hover {
+    color: var(--text-primary);
+  }
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-xs);
+  }
+  .dispatch-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--text-primary);
+  }
+  .divider {
+    border: 0;
+    border-top: 1px solid var(--border-color);
+    margin: var(--space-md) 0 var(--space-lg) 0;
+  }
+  
   .prose {
-    line-height: 1.8;
     font-size: 1.05rem;
+    line-height: 1.8;
     color: var(--text-primary);
   }
   .prose :global(p) {
     margin-bottom: 1.5rem;
+    color: var(--text-primary);
   }
-  .prose :global(h2), .prose :global(h3) {
-    margin-top: 2rem;
+  .prose :global(h1), 
+  .prose :global(h2), 
+  .prose :global(h3) {
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 2.5rem;
     margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+  .prose :global(h2) { font-size: 1.5rem; }
+  .prose :global(h3) { font-size: 1.25rem; }
+  
+  .prose :global(blockquote) {
+    border-left: 2px solid var(--text-primary);
+    padding-left: var(--space-md);
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--text-secondary);
+  }
+  .prose :global(code) {
+    font-family: var(--font-mono);
+    background: var(--bg-surface);
+    padding: 0.2rem 0.4rem;
+    font-size: 0.875em;
+    border: 1px solid var(--border-color);
+  }
+  .prose :global(pre) {
+    background: var(--bg-surface);
+    padding: var(--space-md);
+    border: 1px solid var(--border-color);
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+  .prose :global(ul), .prose :global(ol) {
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .prose :global(li) {
+    margin-bottom: 0.5rem;
   }
 </style>
