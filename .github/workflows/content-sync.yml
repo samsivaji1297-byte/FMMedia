@@ -38,8 +38,14 @@ jobs:
                 [ -e "$file" ] || continue
                 filename=$(basename "$file")
                 
-                # Extract clean title from filename
-                clean_title=$(echo "$filename" | sed 's/\.md$//' | sed 's/_/ /g')
+                # Extract title: prefer first Markdown header (# Title), else format timestamp cleanly
+                first_h1=$(grep -m 1 '^# ' "$file" | sed 's/^# //')
+
+                if [ -n "$first_h1" ]; then
+                  clean_title="$first_h1"
+                else
+                  clean_title="$PREFIX Dispatch // $file_date"
+                fi
                 
                 # Extract date YYYY-MM-DD from filename if present, else fallback to today
                 if [[ "$filename" =~ ([0-9]{4}-[0-9]{2}-[0-9]{2}) ]]; then
