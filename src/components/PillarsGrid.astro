@@ -1,0 +1,102 @@
+---
+const pillars = [
+  {
+    title: 'Sovereign OS',
+    description: 'Personal operating systems, focus protocols, and sovereign execution models.',
+    href: '/sovereignos',
+    tag: 'OS_KERNEL'
+  },
+  {
+    title: 'Blueprints',
+    description: 'System designs, workflow automation maps, and infrastructure schematics.',
+    href: '/blueprints',
+    tag: 'SYSTEMS'
+  },
+  {
+    title: 'IP Factory',
+    description: 'High-value digital products, strategic guides, and proprietary models.',
+    href: '/ipfactory',
+    tag: 'ASSETS'
+  },
+  {
+    title: 'Writing Factory',
+    description: 'Signal-dense dispatches, strategic memos, and tactical content.',
+    href: '/writingfactory',
+    tag: 'DISPATCHES'
+  }
+];
+---
+
+<section class="pillars-section">
+  <div class="section-header">
+    <span class="section-tag">// EMPIRE_ARCHITECTURE</span>
+    <h2>Core Pillars</h2>
+  </div>
+  <div class="pillars-grid">
+    {pillars.map((pillar) => (
+      <a href={pillar.href} class="pillar-card">
+        <span class="card-tag">{pillar.tag}</span>
+        <h3>{pillar.title}</h3>
+        <p>{pillar.description}</p>
+        <span class="card-arrow">→</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .pillars-section {
+    padding: var(--space-lg) 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .section-header {
+    margin-bottom: var(--space-md);
+  }
+  .section-tag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+  .section-header h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-sm);
+  }
+  .pillar-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: var(--space-md);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px;
+    transition: all 0.2s ease;
+  }
+  .pillar-card:hover {
+    background: var(--bg-surface-hover);
+    border-color: var(--accent-sovereign);
+  }
+  .card-tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+  .pillar-card h3 {
+    font-size: 1.25rem;
+    margin: var(--space-xs) 0;
+  }
+  .pillar-card p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+  .card-arrow {
+    align-self: flex-end;
+    font-family: var(--font-mono);
+    margin-top: var(--space-sm);
+  }
+</style>
