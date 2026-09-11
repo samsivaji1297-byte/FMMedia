@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout Website Repo (FMMedia)
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Checkout Vault Repo (FMMediaEnterprises-Hub)
         uses: actions/checkout@v4
