@@ -1,35 +1,56 @@
-name: Sync ContentFactory → Website
+name: Sync Vault → FMMedia Engine
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Allows manual trigger anytime
+  schedule:
+    - cron: '0 */6 * * *' # Auto-runs every 6 hours (optional)
   push:
-    paths:
-      - "content/**"
+    branches:
+      - main
 
 jobs:
   sync:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Website Repo
-        uses: actions/checkout@v3
+      - name: Checkout Website Repo (FMMedia)
+        uses: actions/checkout@v4
 
-      - name: Checkout ContentFactory Repo
-        uses: actions/checkout@v3
+      - name: Checkout Vault Repo (FMMediaEnterprises-Hub)
+        uses: actions/checkout@v4
         with:
-          repository: YOUR_USERNAME/ContentFactory
-          path: contentfactory
+          repository: 'samsivaji1297-byte/FMMediaEnterprises-Hub'
           token: ${{ secrets.GH_TOKEN }}
+          path: 'hub_temp'
 
-      - name: Copy Markdown Files
+      - name: Map & Copy Markdown Vaults
         run: |
-          mkdir -p src/content/blog
-          cp contentfactory/output/blog/*.md src/content/blog/
+          # Ensure destination directories exist inside Astro content layer
+          mkdir -p src/content/blog src/content/sovereignos
 
-      - name: Commit & Push
+          # 1. Sync FreeFall into blog collection
+          if [ -d "hub_temp/WritingFactory/FreeFall" ]; then
+            echo "Syncing FreeFall..."
+            rsync -av --delete hub_temp/WritingFactory/FreeFall/ src/content/blog/
+          fi
+
+          # 2. Sync Mindset into sovereignos collection
+          if [ -d "hub_temp/WritingFactory/Mindset" ]; then
+            echo "Syncing Mindset..."
+            rsync -av --delete hub_temp/WritingFactory/Mindset/ src/content/sovereignos/
+          fi
+
+          # Clean up temporary clone
+          rm -rf hub_temp
+
+      - name: Commit & Push to FMMedia
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          git config user.name "Sovereign Vault Bot"
+          git config user.email "bot@users.noreply.github.com"
           git add .
-          git commit -m "Sync content from ContentFactory" || echo "No changes to commit"
-          git push
+          if git diff-index --quiet HEAD; then
+            echo "No new changes detected in vault."
+          else
+            git commit -m "sync: pulled latest FreeFall and Mindset dispatches from Hub"
+            git push
+          fi
