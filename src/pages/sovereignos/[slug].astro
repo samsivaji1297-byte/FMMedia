@@ -1,19 +1,69 @@
 ---
-import { getCollection } from 'astro:content';
+import '../../styles/global.css';
+import NavBar from '../../components/NavBar.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
   const items = await getCollection('sovereignos');
-  return items.map(item => ({
-    params: { slug: item.slug },
+  return items.map((item) => ({
+    params: { slug: item.slug || item.id.replace(/\.(md|mdx)$/, '') },
     props: { item },
   }));
 }
 
 const { item } = Astro.props;
+const { Content } = await render(item);
 ---
 
-<h1>{item.data.title}</h1>
-<p>{item.data.description}</p>
-<article>
-  <slot />
-</article>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{item.data?.title || item.id} // FM//MEDIA</title>
+  </head>
+  <body>
+    <NavBar />
+    <main class="container">
+      <article class="article-wrapper">
+        <header class="article-header">
+          <a href="/sovereignos" class="back-link">← Sovereign OS Index</a>
+          <h1>{item.data?.title || item.id.replace('Mindset_', '').replace('.md', '')}</h1>
+        </header>
+        <div class="prose">
+          <Content />
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .article-wrapper {
+    padding: var(--space-lg) 0;
+    max-width: 750px;
+  }
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .article-header h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin-top: var(--space-xs);
+    margin-bottom: var(--space-md);
+  }
+  .prose {
+    line-height: 1.8;
+    font-size: 1.05rem;
+    color: var(--text-primary);
+  }
+  .prose :global(p) {
+    margin-bottom: 1.5rem;
+  }
+  .prose :global(h2), .prose :global(h3) {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+</style>
