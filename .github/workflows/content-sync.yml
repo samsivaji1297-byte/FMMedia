@@ -4,9 +4,9 @@ on:
   workflow_dispatch: # Allows manual trigger anytime
   schedule:
     - cron: '0 */6 * * *' # Auto-runs every 6 hours (optional)
-  push:
-    branches:
-      - main
+  # push:
+  #  branches:
+  #   - main
 
 jobs:
   sync:
