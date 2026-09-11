@@ -1,0 +1,74 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  link?: string;
+  price?: string;
+}
+
+const {
+  title = "Sovereign Operator's Deflection Arsenal",
+  description = "A tactical system designed to reclaim attention, optimize focus, and eliminate corporate friction.",
+  link = "https://thefinalmindset.gumroad.com",
+  price = "Gumroad Node"
+} = Astro.props;
+---
+
+<section class="cta-section">
+  <div class="cta-box">
+    <div class="cta-info">
+      <span class="cta-badge">{price}</span>
+      <h2>{title}</h2>
+      <p>{description}</p>
+    </div>
+    <div class="cta-action">
+      <a href={link} target="_blank" rel="noopener noreferrer" class="cta-button">
+        Acquire Protocol
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-section {
+    padding: var(--space-lg) 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .cta-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: var(--space-md);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+  }
+  .cta-badge {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .cta-info h2 {
+    font-size: 1.5rem;
+    margin: 0.25rem 0;
+  }
+  .cta-info p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    max-width: 550px;
+  }
+  .cta-button {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.75rem 1.5rem;
+    display: inline-block;
+    transition: opacity 0.2s ease;
+  }
+  .cta-button:hover {
+    opacity: 0.9;
+  }
+</style>
