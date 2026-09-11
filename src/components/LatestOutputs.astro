@@ -1,0 +1,118 @@
+---
+import { getCollection } from 'astro:content';
+
+const blogPosts = await getCollection('blog');
+const ipItems = await getCollection('ipfactory');
+
+const recentBlog = blogPosts.slice(0, 3).map(post => ({
+  title: post.data.title,
+  description: post.data.description,
+  slug: `/blog/${post.slug || post.id.replace(/\.(md|mdx)$/, '')}`,
+  type: 'DISPATCH'
+}));
+
+const recentIP = ipItems.slice(0, 2).map(item => ({
+  title: item.data.title,
+  description: item.data.description,
+  slug: `/ipfactory/${item.slug || item.id.replace(/\.(md|mdx)$/, '')}`,
+  type: 'IP_ASSET'
+}));
+
+const outputs = [...recentBlog, ...recentIP];
+---
+
+<section class="outputs-section">
+  <div class="section-header">
+    <span class="section-tag">// SIGNAL_FEED</span>
+    <h2>Latest Outputs</h2>
+  </div>
+  
+  <div class="outputs-list">
+    {outputs.length > 0 ? (
+      outputs.map((item) => (
+        <a href={item.slug} class="output-item">
+          <div class="item-meta">
+            <span class="item-type">{item.type}</span>
+          </div>
+          <div class="item-main">
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+          </div>
+          <span class="item-arrow">→</span>
+        </a>
+      ))
+    ) : (
+      <p class="empty-feed">Pipeline active. Pending next content sync.</p>
+    )}
+  </div>
+</section>
+
+<style>
+  .outputs-section {
+    padding: var(--space-lg) 0;
+  }
+  .section-header {
+    margin-bottom: var(--space-md);
+  }
+  .section-tag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+  .section-header h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+  .outputs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border-color);
+    border: 1px solid var(--border-color);
+  }
+  .output-item {
+    background: var(--bg-primary);
+    padding: var(--space-md);
+    display: grid;
+    grid-template-columns: 120px 1fr 40px;
+    align-items: center;
+    gap: var(--space-sm);
+    transition: background 0.2s ease;
+  }
+  .output-item:hover {
+    background: var(--bg-surface);
+  }
+  .item-type {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+  .item-main h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  .item-main p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+  .item-arrow {
+    font-family: var(--font-mono);
+    text-align: right;
+  }
+  .empty-feed {
+    padding: var(--space-md);
+    background: var(--bg-primary);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 640px) {
+    .output-item {
+      grid-template-columns: 1fr;
+    }
+    .item-arrow {
+      display: none;
+    }
+  }
+</style>
